@@ -11,3 +11,23 @@ services:
       - ./docker/redis/conf/redis.conf:/usr/local/conf/redis.conf
     restart: always
     command: redis-server /usr/local/conf/redis.conf
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 1s
+      timeout: 3s
+      retries: 3
+
+  bullmq-dashboard:
+    image: deadly0/bull-board
+    container_name: bullmq-dashboard
+    restart: always
+    ports:
+      - 43000:3000
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_USE_TLS: 'false'
+      BULL_PREFIX: bull
+    depends_on:
+      redis:
+        condition: service_healthy

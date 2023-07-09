@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { MessageQueue } from './message-queue/message-queue.interface';
 import { MessageQueueService } from './message-queue/message-queue.service';
 
 @Injectable()

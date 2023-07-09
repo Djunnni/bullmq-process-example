@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MessageQueueService } from './message-queue.service';
 import { BullModule } from '@nestjs/bull';
 import { InvoiceConsumer } from './consumers/invoice.consumers';
 
 import { MessageQueueConfig } from './config/message-queue.config';
+import { MessageQueueSqsService } from './message-queue-sqs/message-queue-sqs.service';
+import { MessageQueueBullMqService } from './message-queue-bull-mq/message-queue-bull-mq.service';
+import { MessageQueueService } from './message-queue.service';
 
 @Module({
   imports: [
@@ -15,7 +17,14 @@ import { MessageQueueConfig } from './config/message-queue.config';
       name: MessageQueueConfig.BATCH_QUEUE_NAME,
     }),
   ],
-  providers: [MessageQueueService, InvoiceConsumer],
+  providers: [
+    {
+      provide: 'MessageQueue',
+      useClass: MessageQueueSqsService, // MessageQueueSqsService, MessageQueueBullMqService로 둘중하나를 선택해서 배포가 가능하다.
+    },
+    InvoiceConsumer,
+    MessageQueueService,
+  ],
   exports: [MessageQueueService],
 })
 export class MessageQueueModule {}

@@ -1,16 +1,14 @@
-import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
-import { Queue } from 'bull';
-import { MessageQueueConfig } from './config/message-queue.config';
+import { Inject, Injectable } from '@nestjs/common';
+import { MessageQueue } from './message-queue.interface';
 
 @Injectable()
-export class MessageQueueService {
+export class MessageQueueService implements MessageQueue {
   constructor(
-    @InjectQueue(MessageQueueConfig.BATCH_QUEUE_NAME) private batchQueue: Queue,
+    @Inject('MessageQueue')
+    private readonly messageQueue: MessageQueue,
   ) {}
 
-  async addJob(data: any) {
-    const job = this.batchQueue.add('invoice-excel', data);
-    return (await job).name;
+  addJob(data: any): Promise<string> {
+    return this.messageQueue.addJob(data);
   }
 }

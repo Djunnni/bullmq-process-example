@@ -6,7 +6,8 @@ export class AppService {
   constructor(private readonly messageQueueService: MessageQueueService) {}
 
   getHello(): string {
-    return 'Hello World!';
+    return '123';
+    // return this.messageQueueService.hello11();
   }
 
   createJob(): Promise<string> {

@@ -1,22 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   BullRootModuleOptions,
   SharedBullConfigurationFactory,
 } from '@nestjs/bull';
-import { ConfigService } from '@nestjs/config';
+import { ConfigType } from '@nestjs/config';
+import messageQueueConfig from 'src/config/messageQueue';
+
 @Injectable()
 export class MessageQueueConfig implements SharedBullConfigurationFactory {
   static CONFIG_KEY = 'bull-config';
   static BATCH_QUEUE_NAME = 'batch';
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    @Inject(messageQueueConfig.KEY)
+    private config: ConfigType<typeof messageQueueConfig>,
+  ) {}
 
   createSharedConfiguration():
     | BullRootModuleOptions
     | Promise<BullRootModuleOptions> {
     return {
       redis: {
-        host: this.configService.get('BULLMQ_REDIS_HOST'),
-        port: this.configService.get('BULLMQ_REDIS_PORT'),
+        host: this.config.host,
+        port: this.config.port,
       },
     };
   }

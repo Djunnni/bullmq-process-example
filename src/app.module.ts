@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { MessageQueueModule } from './message-queue/message-queue.module';
 import { ConfigModule } from '@nestjs/config';
 import { validationSchema } from './config/validationSchema';
-import messageQueueConfig from './config/messageQueue';
 
 @Module({
   imports: [
@@ -13,7 +12,6 @@ import messageQueueConfig from './config/messageQueue';
       envFilePath: [
         `${__dirname}/config/env/.${process.env.NODE_ENV ?? 'local'}.env`,
       ],
-      load: [messageQueueConfig],
       validationSchema,
     }),
     MessageQueueModule,

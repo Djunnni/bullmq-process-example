@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { MessageQueueModule } from './message-queue/message-queue.module';
 import { ConfigModule } from '@nestjs/config';
 import { validationSchema } from './config/validationSchema';
+import { PersistenceModule } from './persistence/persistence.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { validationSchema } from './config/validationSchema';
       validationSchema,
     }),
     MessageQueueModule,
+    PersistenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
